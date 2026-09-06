@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Business Layer/Business Layer.csproj" />
+  <Project Path="Data Access Layer/Data Access Layer.csproj" />
+  <Project Path="GameZoneBack/GameZoneBack.csproj" />
+  <Project Path="Models/Models.csproj" />
+</Solution>
