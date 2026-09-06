@@ -21,7 +21,7 @@ A production-ready **RESTful Web API** for a full-scale game marketplace platfor
 
 ## ⚡ TL;DR
 
-GameZone Backend is a **complete game store REST API** covering everything a real gaming marketplace needs — authentication, game catalog, purchasing, wishlists, reviews, friend systems, direct messaging, notifications, events, and more. Secured with JWT Bearer tokens, documented through Swagger UI, and structured on a clean 3-tier layered architecture with a 30+ table ERD.
+GameZone Backend is a **complete game store REST API** covering everything a real gaming marketplace needs — authentication, game catalog, purchasing, wishlists, reviews, friend systems, direct messaging, notifications, events, and more. Secured with JWT Bearer tokens, documented through Swagger UI, and structured on a clean 3-tier layered architecture with a 40+ table ERD.
 
 👉 Not a tutorial project — a **fully architected, production-structured backend** with real security, real data relationships, and real API depth.
 
@@ -34,7 +34,7 @@ GameZone Backend is a **complete game store REST API** covering everything a rea
 - Clean **3-Tier Architecture**: Presentation (Controllers) → Business Layer → Data Access Layer
 - Custom **ExceptionMiddleware** for centralized error handling
 - CORS policy configured (`GameZoneApiCorsPolicy`)
-- **30+ database tables** with full ERD covering games, users, purchases, friends, notifications, messages, events, reviews, and more
+- **40+ database tables** with full ERD covering games, users, purchases, friends, notifications, messages, events, reviews, and more
 - **15 API controller groups** with 70+ endpoints across GET, POST, PUT, DELETE methods
 - Entity Framework Core with Code-First approach
 - Environment variable–based secret key management for JWT (`JWT_SECRET_KEY`)
