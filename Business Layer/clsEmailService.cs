@@ -30,7 +30,7 @@ public class clsEmailService
             var host = _config["EmailSettings:Host"];
             var port = int.Parse(_config["EmailSettings:Port"]!);
             var userName = _config["EmailSettings:UserName"];
-            var password = _config["EmailSettings:Password"];
+            var password = Environment.GetEnvironmentVariable("EmailServicePassword");
             var senderEmail = _config["EmailSettings:SenderEmail"];
             var senderName = _config["EmailSettings:SenderName"];
 

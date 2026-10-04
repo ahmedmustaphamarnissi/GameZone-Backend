@@ -396,6 +396,37 @@ namespace GameZoneBack.Controllers
             });
         }
 
+        [HttpGet("tst")]
+        [AllowAnonymous]
+        public async Task<IActionResult> test()
+        {
+            var emailService = new Business_Layer.clsEmailService(_config);
+
+            bool emailSent = await emailService.SendEmailAsync(
+                "marnissiahmed1911@gmail.com",
+                "GameZone SMTP Test",
+                """
+        <h2>Hello from GameZone!</h2>
+        <p>This is a test email sent from the GameZone ASP.NET Core API.</p>
+        """
+            );
+
+            if (!emailSent)
+            {
+                return BadRequest(new
+                {
+                    message = "Email could not be sent."
+                });
+            }
+
+            return Ok(new
+            {
+                message = "Test email sent successfully."
+            });
+        }
+
+
+
 
     }
 }
