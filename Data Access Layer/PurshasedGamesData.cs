@@ -123,7 +123,8 @@ public class PurshasedGamesData : BaseData
             .Select(g => new { GenreId = g.Key, Count = g.Count() })
             .ToDictionaryAsync(x => x.GenreId, x => x.Count));
 
-        var ReviewsCountTask = RunWithContext(ctx => ctx.Reviews.AsNoTracking().Where(r => r.GameId == gameId).CountAsync());
+        var ReviewsCountTask = RunWithContext(
+            ctx => ctx.Reviews.AsNoTracking().Where(r => r.GameId == gameId).CountAsync());
 
         var PurshasedUserData = RunWithContext(ctx => ctx.PurchasedGames.Where
                                 (p => p.UserId == userId && p.GameId == gameId).Select(pp => new
@@ -171,7 +172,13 @@ public class PurshasedGamesData : BaseData
             updateDate = game.updateDate,
             gameDescription = game.gameDescription,
             company = company,
-            rating = context.Reviews.Any() ? (decimal)context.Reviews.Average(r => (double)r.Review1) : 0,
+            rating = context.Reviews.Any(r => r.GameId == gameId)
+    ? Math.Round(
+        (decimal)context.Reviews
+            .Where(r => r.GameId == gameId)
+            .Average(r => (double)r.Review1),
+        2)
+    : 0,
             reviewsCount = ReviewsCountTask.Result,
             categories = game.categoriesRaw.Select(c => new CategoriesDTO
             {
@@ -202,19 +209,20 @@ public class PurshasedGamesData : BaseData
         using var context = CreateDbContext();
         var query = context.PurchasedGames.AsNoTracking()
             .Where(p => p.UserId == userId);
-        if(!query.Any()) {
+        if (!query.Any())
+        {
             return null;
         }
-        if(request.Filter != null)
+        if (request.Filter != null)
         {
-            switch(request.Filter)
-            { 
+            switch (request.Filter)
+            {
                 case PurshasedHistoryFilter.Free:
                     query = query.Where(p => p.PurchasedPrice == 0);
                     break;
             }
         }
-        if(request.ReleaseDate != null)
+        if (request.ReleaseDate != null)
         {
             switch (request.ReleaseDate)
             {
@@ -230,7 +238,7 @@ public class PurshasedGamesData : BaseData
             }
         }
 
-        if(request.OrderBy != null)
+        if (request.OrderBy != null)
         {
             switch (request.OrderBy)
             {
