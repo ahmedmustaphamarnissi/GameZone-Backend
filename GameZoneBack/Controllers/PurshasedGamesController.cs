@@ -186,7 +186,7 @@ namespace GameZoneBack.Controllers
             }
 
             var user = await purchasedGamesBusiness
-    .GetUserPurchaseCredentials(currentUserId, request.gameId);
+                .GetUserPurchaseCredentials(currentUserId, request.gameId);
 
             if (user == null)
             {
@@ -206,44 +206,44 @@ namespace GameZoneBack.Controllers
                 : $"${user.PurchasePrice:F2}";
 
             bool emailSent = await emailService.SendEmailAsync(
-                "gamezone.team@outlook.com",
-                $"Purchase Confirmation - {user.GameName}",
+                user.Email,
+                $"Your GameZone order: {user.GameName}",
                 $"""
-    <!DOCTYPE html>
-    <html>
-    <body style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
+<!DOCTYPE html>
+<html>
+<body style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
 
-        <h2>Purchase Successful!</h2>
+    <h2>Thank you for your purchase!</h2>
 
-        <p>Hello <strong>{userName}</strong>,</p>
+    <p>Hello <strong>{userName}</strong>,</p>
 
-        <p>
-            Thank you for your purchase from <strong>GameZone</strong>.
-            Your purchase has been successfully completed.
-        </p>
+    <p>
+        Your order on <strong>GameZone</strong> has been completed successfully.
+        Here is a summary:
+    </p>
 
-        <div style="padding: 15px; border: 1px solid #ddd; border-radius: 8px;">
-            <h3 style="margin-top: 0;">Purchase Details</h3>
+    <div style="padding: 15px; border: 1px solid #ddd; border-radius: 8px;">
+        <h3 style="margin-top: 0;">Order Summary</h3>
 
-            <p><strong>Game:</strong> {gameName}</p>
+        <p><strong>Game:</strong> {gameName}</p>
 
-            <p><strong>Amount Paid:</strong> {priceText}</p>
-        </div>
+        <p><strong>Amount Paid:</strong> {priceText}</p>
+    </div>
 
-        <p>Your game is now available in your GameZone library.</p>
+    <p>The game has been added to your GameZone library.</p>
 
-        <p>We hope you enjoy your game!</p>
+    <p>We hope you enjoy playing!</p>
 
-        <br />
+    <br />
 
-        <p>
-            Best regards,<br />
-            <strong>GameZone Team</strong>
-        </p>
+    <p>
+        Best regards,<br />
+        <strong>The GameZone Team</strong>
+    </p>
 
-    </body>
-    </html>
-    """
+</body>
+</html>
+"""
             );
 
             if (!emailSent)
@@ -284,8 +284,10 @@ namespace GameZoneBack.Controllers
 
             bool checkForFriendShip = await new Business_Layer.clsFriendRequests(_config)
                 .CheckIfIdFromFriendsList(currentUserId, receverId);
+
             if (!checkForFriendShip)
                 return BadRequest("this user is not in your friend list");
+
             // Check if the user already owns the game
             bool checkIfGamePurchased = await purchasedGamesBusiness
                 .IsGamePurshased(request.gameId, receverId);
@@ -328,7 +330,7 @@ namespace GameZoneBack.Controllers
             }
 
             var user = await purchasedGamesBusiness
-    .GetUserPurchaseCredentials(receverId, request.gameId);
+                .GetUserPurchaseCredentials(receverId, request.gameId);
 
             if (user == null)
             {
@@ -343,44 +345,42 @@ namespace GameZoneBack.Controllers
             var userName = WebUtility.HtmlEncode(user.UserName);
             var gameName = WebUtility.HtmlEncode(user.GameName);
 
-            var priceText = user.PurchasePrice == 0
-                ? "Free"
-                : $"${user.PurchasePrice:F2}";
-
             bool emailSent = await emailService.SendEmailAsync(
-    "gamezone.team@outlook.com",
-    $"You've received a gift - {user.GameName}",
-    $"""
-    <!DOCTYPE html>
-    <html>
-    <body style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
-        
-        <h2>You've received a gift!</h2>
+                user.Email,
+                $"A friend sent you a gift on GameZone: {user.GameName}",
+                $"""
+<!DOCTYPE html>
+<html>
+<body style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
 
-        <p>Hello <strong>{userName}</strong>,</p>
+    <h2>You've received a gift!</h2>
 
-        <p>
-            Great news! One of your friends has sent you a gift on GameZone.
-        </p>
+    <p>Hello <strong>{userName}</strong>,</p>
 
-        <div style="padding: 15px; border: 1px solid #ddd; border-radius: 8px;">
-            <h3 style="margin-top: 0;">Gift Details</h3>
-            <p><strong>Game:</strong> {gameName}</p>
-        </div>
+    <p>
+        Great news! One of your friends has sent you a gift on
+        <strong>GameZone</strong>.
+    </p>
 
-        <p>The game is now available in your GameZone library.</p>
+    <div style="padding: 15px; border: 1px solid #ddd; border-radius: 8px;">
+        <h3 style="margin-top: 0;">Gift Details</h3>
 
-        <br />
+        <p><strong>Game:</strong> {gameName}</p>
+    </div>
 
-        <p>
-            Best regards,<br />
-            <strong>GameZone Team</strong>
-        </p>
+    <p>The game has been added to your GameZone library. Enjoy!</p>
 
-    </body>
-    </html>
-    """
-);
+    <br />
+
+    <p>
+        Best regards,<br />
+        <strong>The GameZone Team</strong>
+    </p>
+
+</body>
+</html>
+"""
+            );
 
             if (!emailSent)
             {

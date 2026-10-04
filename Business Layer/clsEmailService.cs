@@ -46,10 +46,13 @@ public class clsEmailService
 
             message.Subject = subject;
 
-            message.Body = new TextPart("html")
+            var builder = new BodyBuilder
             {
-                Text = htmlBody
+                HtmlBody = htmlBody,
+                TextBody = "Thank you for using GameZone. Please view this email in an HTML-compatible client."
             };
+
+            message.Body = builder.ToMessageBody();
 
             using var smtp = new MailKit.Net.Smtp.SmtpClient();
 
@@ -72,7 +75,8 @@ public class clsEmailService
         }
         catch (Exception ex)
         {
-            throw new Exception($"Email sending failed: {ex.Message}", ex);
+            Console.WriteLine($"Email sending failed: {ex.Message}");
+            return false;
         }
     }
 }
